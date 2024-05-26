@@ -1,17 +1,25 @@
 <script setup>
 import Pagination from './Pagination.vue';
+import SearchBar from './SearchBar.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const characters = ref([]);
 const pagination = ref({});
 
+const searchParams = ref({ name: '', status: '' });
+
 async function fetchCharacters(page = 1) {
   const { data } = await axios.get(
-    `https://rickandmortyapi.com/api/character?page=${page}`
+    `https://rickandmortyapi.com/api/character?page=${page}&name=${searchParams.value.name}&status=${searchParams.value.status}`
   );
   characters.value = data.results;
   pagination.value = data.info;
+}
+
+function search(e) {
+  searchParams.value = e;
+  fetchCharacters();
 }
 
 onMounted(() => {
@@ -20,6 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <SearchBar @search="search" />
   <Pagination @change-page="fetchCharacters($event)" :pagination="pagination" />
 
   <div class="grid grid-cols-3 gap-5 max-w-3xl mx-auto mt-10">
