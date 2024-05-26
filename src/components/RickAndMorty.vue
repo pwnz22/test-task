@@ -1,34 +1,27 @@
 <script setup>
+import Pagination from './Pagination.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const characters = ref([]);
 const pagination = ref({});
 
-onMounted(async () => {
-  const { data } = await axios.get('https://rickandmortyapi.com/api/character');
+async function fetchCharacters(page = 1) {
+  const { data } = await axios.get(
+    `https://rickandmortyapi.com/api/character?page=${page}`
+  );
   characters.value = data.results;
   pagination.value = data.info;
+}
+
+onMounted(() => {
+  fetchCharacters();
 });
-
-// const nextPage = () => {
-//   if (page.value !== Math.ceil(pagination.value.info. / perPage)) {
-//     page.value += 1;
-//   }
-// };
-
-const backPage = () => {
-  if (page.value !== 1) {
-    page.value -= 1;
-  }
-};
-
-const goToPage = (numPage) => {
-  page.value = numPage;
-};
 </script>
 
 <template>
+  <Pagination @change-page="fetchCharacters($event)" :pagination="pagination" />
+
   <div class="grid grid-cols-3 gap-5 max-w-3xl mx-auto mt-10">
     <div
       class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
