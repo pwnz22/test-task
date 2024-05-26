@@ -1,5 +1,5 @@
 <script setup>
-import RickAndMorty from "./components/RickAndMorty.vue";
+import RickAndMorty from './components/RickAndMorty.vue';
 </script>
 
 <template>
